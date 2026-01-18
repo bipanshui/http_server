@@ -11,6 +11,9 @@ It supports 📦:
 - Custom response helpers ('res.json', 'res.status', 'res.send')
 - Logger middleware
 
+![Diagram](./excalidraw.svg)
+
+
 I made this project to learn how Express works internally and for first principle thinking
 
 ## 🛠️ Tech Stack
