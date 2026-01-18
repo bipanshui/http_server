@@ -1,3 +1,4 @@
+import { timeStamp } from "console";
 import http from "http"
 
 type HTTPmethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
@@ -120,13 +121,45 @@ function jsonParser(): MiddleWare {
 
 function logger(): MiddleWare {
     return (req, res, next) => {
-       
+       const start = Date.now();
+       res.on("finish", () =>{
+            const duration = Date.now()-start;
+            console.log(`${req.method} ${req.url} ${res.statusCode} - ${duration}ms`);
+       });
+       next()
     } 
 }
 
 const router = new Router()
 router.use(logger())
 router.use(jsonParser())
+
+router.get("/", (req, res)=>{
+    res.json({ 
+        message : "hey i am Bipanshu, custom http server works well!"
+    })
+})
+
+router.get("/users/:id", (req, res)=>{
+    res.json({
+        userId : req.params?.id,
+        query : req.query
+    })
+})
+
+router.post("/users", (req, res)=>{
+    res.status(201).json({
+        message : "user created",
+        data : req.body
+    })
+})
+
+router.get("/status", (req, res)=>{
+    res.status(200).json({
+        status : "ok",
+        timestamp : new Date().toISOString()
+    })
+})
 
 const httpServer = http.createServer((req, res) => {
     router.handle(req as Request, res as Response)
